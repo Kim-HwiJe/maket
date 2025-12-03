@@ -12,10 +12,19 @@ import {
 } from '@/components/ui/card'
 import { Store, Lock, User } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import api from '@/lib/api'
+
+// 백엔드 응답 타입 명확히 선언
+interface LoginResponse {
+  token: string
+  role: string
+  username: string
+}
 
 const Login = () => {
   const navigate = useNavigate()
   const { toast } = useToast()
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -24,33 +33,41 @@ const Login = () => {
     e.preventDefault()
     setIsLoading(true)
 
-    // 기존 임시 로그인 로직
-    setTimeout(() => {
-      if (username && password) {
-        const userRole = username === '사장님' ? 'owner' : 'staff'
-        localStorage.setItem('userRole', userRole)
-        localStorage.setItem('username', username)
+    try {
+      const res = await api.post<LoginResponse>('/auth/login', {
+        username,
+        password,
+      })
 
-        toast({
-          title: '로그인 성공',
-          description: `${username}님 환영합니다.`,
-        })
+      const { token, role, username: userNameFromDB } = res.data
 
-        if (userRole === 'owner') {
-          navigate('/owner/dashboard')
-        } else {
-          navigate('/staff/dashboard')
-        }
+      // 저장
+      localStorage.setItem('token', token)
+      localStorage.setItem('userRole', role)
+      localStorage.setItem('username', userNameFromDB)
+
+      toast({
+        title: '로그인 성공',
+        description: `${userNameFromDB}님 환영합니다.`,
+      })
+
+      // 이동
+      if (role === 'owner') {
+        navigate('/owner/dashboard')
       } else {
-        toast({
-          title: '로그인 실패',
-          description: '아이디와 비밀번호를 입력해주세요.',
-          variant: 'destructive',
-        })
+        navigate('/staff/dashboard')
       }
+    } catch (err: any) {
+      toast({
+        title: '로그인 실패',
+        description:
+          err?.response?.data?.message ||
+          '아이디 또는 비밀번호가 올바르지 않습니다.',
+        variant: 'destructive',
+      })
+    }
 
-      setIsLoading(false)
-    }, 1000)
+    setIsLoading(false)
   }
 
   return (
@@ -114,7 +131,7 @@ const Login = () => {
               </Button>
             </form>
 
-            {/* 회원가입 + 비밀번호 찾기 영역 */}
+            {/* 회원가입 & 비밀번호 찾기 */}
             <div className="mt-6 flex items-center justify-between text-sm text-primary">
               <button
                 type="button"
