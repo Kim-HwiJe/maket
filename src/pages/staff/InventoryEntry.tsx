@@ -23,7 +23,7 @@ import axios from 'axios'
 
 // API 인스턴스 설정
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://maket-l0oq.onrender.com/api',
 })
 
 // 요청 인터셉터: 토큰 자동 포함

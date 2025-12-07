@@ -15,7 +15,7 @@ import {
   TrendingUp,
   ShoppingCart,
   Megaphone,
-  ClipboardList
+  ClipboardList,
 } from 'lucide-react'
 import {
   LineChart,
@@ -34,7 +34,7 @@ import { useToast } from '@/hooks/use-toast'
 
 // API 설정
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://maket-l0oq.onrender.com/api',
 })
 
 api.interceptors.request.use((config) => {
@@ -77,8 +77,8 @@ const OwnerDashboard = () => {
     todayStaff: [],
     alerts: {
       handovers: [],
-      announcements: []
-    }
+      announcements: [],
+    },
   })
 
   // 데이터 로드
@@ -131,7 +131,7 @@ const OwnerDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card 
+        <Card
           className="border-l-4 border-l-success cursor-pointer hover:bg-accent/50 transition-colors"
           onClick={() => navigate('/owner/inventory')}
         >
@@ -151,7 +151,7 @@ const OwnerDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card 
+        <Card
           className="border-l-4 border-l-warning cursor-pointer hover:bg-accent/50 transition-colors"
           onClick={() => navigate('/owner/inventory')}
         >
@@ -169,7 +169,7 @@ const OwnerDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card 
+        <Card
           className="border-l-4 border-l-accent cursor-pointer hover:bg-accent/50 transition-colors"
           onClick={() => navigate('/owner/staff')}
         >
@@ -304,9 +304,9 @@ const OwnerDashboard = () => {
             <div className="space-y-3">
               {/* 재고 부족 */}
               {data.stats.pendingOrders > 0 && (
-                <div 
-                    className="flex items-start gap-3 p-3 bg-warning/10 border border-warning/20 rounded-lg cursor-pointer hover:bg-warning/20 transition-colors"
-                    onClick={() => navigate('/owner/inventory')}
+                <div
+                  className="flex items-start gap-3 p-3 bg-warning/10 border border-warning/20 rounded-lg cursor-pointer hover:bg-warning/20 transition-colors"
+                  onClick={() => navigate('/owner/inventory')}
                 >
                   <AlertCircle className="w-5 h-5 text-warning mt-0.5" />
                   <div>
@@ -320,14 +320,16 @@ const OwnerDashboard = () => {
 
               {/* 중요 인수인계 */}
               {data.alerts?.handovers?.map((h: any) => (
-                <div 
-                    key={h._id} 
-                    className="flex items-start gap-3 p-3 bg-destructive/10 border border-destructive/20 rounded-lg cursor-pointer hover:bg-destructive/20 transition-colors"
-                    onClick={() => navigate('/staff/handover')}
+                <div
+                  key={h._id}
+                  className="flex items-start gap-3 p-3 bg-destructive/10 border border-destructive/20 rounded-lg cursor-pointer hover:bg-destructive/20 transition-colors"
+                  onClick={() => navigate('/staff/handover')}
                 >
                   <ClipboardList className="w-5 h-5 text-destructive mt-0.5" />
                   <div>
-                    <p className="font-medium text-sm text-destructive">중요 인수인계 (미확인)</p>
+                    <p className="font-medium text-sm text-destructive">
+                      중요 인수인계 (미확인)
+                    </p>
                     <p className="text-xs text-muted-foreground line-clamp-1">
                       {h.writer?.name}: {h.content}
                     </p>
@@ -337,14 +339,16 @@ const OwnerDashboard = () => {
 
               {/* 중요 공지사항 */}
               {data.alerts?.announcements?.map((a: any) => (
-                <div 
-                    key={a._id} 
-                    className="flex items-start gap-3 p-3 bg-primary/10 border border-primary/20 rounded-lg cursor-pointer hover:bg-primary/20 transition-colors"
-                    onClick={() => navigate('/owner/announcements')}
+                <div
+                  key={a._id}
+                  className="flex items-start gap-3 p-3 bg-primary/10 border border-primary/20 rounded-lg cursor-pointer hover:bg-primary/20 transition-colors"
+                  onClick={() => navigate('/owner/announcements')}
                 >
                   <Megaphone className="w-5 h-5 text-primary mt-0.5" />
                   <div>
-                    <p className="font-medium text-sm text-primary">중요 공지사항</p>
+                    <p className="font-medium text-sm text-primary">
+                      중요 공지사항
+                    </p>
                     <p className="text-xs text-muted-foreground line-clamp-1">
                       {a.title}
                     </p>
@@ -353,19 +357,21 @@ const OwnerDashboard = () => {
               ))}
 
               {/* 알림 없음 */}
-              {data.stats.pendingOrders === 0 && 
-               (!data.alerts?.handovers || data.alerts.handovers.length === 0) && 
-               (!data.alerts?.announcements || data.alerts.announcements.length === 0) && (
-                <div className="flex items-start gap-3 p-3 bg-secondary/50 border rounded-lg">
+              {data.stats.pendingOrders === 0 &&
+                (!data.alerts?.handovers ||
+                  data.alerts.handovers.length === 0) &&
+                (!data.alerts?.announcements ||
+                  data.alerts.announcements.length === 0) && (
+                  <div className="flex items-start gap-3 p-3 bg-secondary/50 border rounded-lg">
                     <AlertCircle className="w-5 h-5 text-muted-foreground mt-0.5" />
                     <div>
-                    <p className="font-medium text-sm">시스템 정상 가동</p>
-                    <p className="text-xs text-muted-foreground">
+                      <p className="font-medium text-sm">시스템 정상 가동</p>
+                      <p className="text-xs text-muted-foreground">
                         확인할 중요 알림이 없습니다.
-                    </p>
+                      </p>
                     </div>
-                </div>
-              )}
+                  </div>
+                )}
             </div>
           </CardContent>
         </Card>

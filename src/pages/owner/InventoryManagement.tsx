@@ -31,7 +31,7 @@ import axios from 'axios'
 
 // [수정] 외부 파일 의존성 제거를 위해 api 인스턴스를 내부에서 정의
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // 서버 주소에 맞게 조정 필요
+  baseURL: 'https://maket-l0oq.onrender.com/api', // 서버 주소에 맞게 조정 필요
 })
 
 // 요청 인터셉터 추가 (토큰 자동 포함)
@@ -177,8 +177,8 @@ const InventoryManagement = () => {
   )
   const [items, setItems] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
-  const [orderRequests, setOrderRequests] = useState<OrderRequest[]>(
-    () => loadSavedOrders()
+  const [orderRequests, setOrderRequests] = useState<OrderRequest[]>(() =>
+    loadSavedOrders()
   )
   const [approveTarget, setApproveTarget] = useState<OrderRequest | null>(null)
   const [orderQuantity, setOrderQuantity] = useState('')
@@ -226,11 +226,7 @@ const InventoryManagement = () => {
           // [안전장치 2] 필드값이 없을 경우 기본값 할당 (Null Check)
           productName: item.name || '이름 없음',
           quantity:
-            typeof item.stock === 'number'
-              ? expired
-                ? 0
-                : item.stock
-              : 0, // 유통기한 지난 상품은 0으로 표시
+            typeof item.stock === 'number' ? (expired ? 0 : item.stock) : 0, // 유통기한 지난 상품은 0으로 표시
           category: item.category || '기타',
           price: typeof item.price === 'number' ? item.price : 0,
           minStock: typeof item.minStock === 'number' ? item.minStock : 5,
@@ -631,7 +627,9 @@ const InventoryManagement = () => {
                           </p>
                           <p
                             className={`font-medium ${
-                              expiry !== null && expiry <= 3 && item.quantity > 0
+                              expiry !== null &&
+                              expiry <= 3 &&
+                              item.quantity > 0
                                 ? 'text-destructive'
                                 : ''
                             }`}
@@ -639,8 +637,8 @@ const InventoryManagement = () => {
                             {item.quantity <= 0
                               ? '-'
                               : expiry === null
-                                ? '-'
-                                : `D-${expiry}`}
+                              ? '-'
+                              : `D-${expiry}`}
                           </p>
                         </div>
                         {item.quantity < (item.minStock ?? 0) && (
@@ -651,14 +649,16 @@ const InventoryManagement = () => {
                             부족
                           </Badge>
                         )}
-                        {item.quantity > 0 && expiry !== null && expiry <= 3 && (
-                          <Badge
-                            variant="outline"
-                            className="border-destructive text-destructive"
-                          >
-                            임박
-                          </Badge>
-                        )}
+                        {item.quantity > 0 &&
+                          expiry !== null &&
+                          expiry <= 3 && (
+                            <Badge
+                              variant="outline"
+                              className="border-destructive text-destructive"
+                            >
+                              임박
+                            </Badge>
+                          )}
                       </div>
                     </div>
                   )
