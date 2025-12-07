@@ -1,14 +1,17 @@
 import axios from 'axios'
 
+const API_BASE_URL = import.meta.env.PROD
+  ? 'https://maket-l0oq.onrender.com/api'
+  : 'http://localhost:5000/api'
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // Node 서버 주소
+  baseURL: API_BASE_URL,
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// 요청 인터셉터 (토큰 자동 포함)
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
