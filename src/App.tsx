@@ -21,6 +21,7 @@ import Community from './pages/common/Community'
 import Announcements from './pages/common/Announcements'
 import NotFound from './pages/NotFound'
 import SelfCalculation from './pages/SelfCalculation'
+import TeamMembers from './pages/common/TeamMembers'
 
 const queryClient = new QueryClient()
 
@@ -132,6 +133,14 @@ const App = () => (
             element={
               <DashboardLayout>
                 <Community />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/team"
+            element={
+              <DashboardLayout>
+                <TeamMembers />
               </DashboardLayout>
             }
           />
